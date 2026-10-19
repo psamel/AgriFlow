@@ -2,19 +2,29 @@
 
 [![Standard: C99](https://img.shields.io/badge/Language-C99-blue.svg)](https://en.wikipedia.org/wiki/C99)
 [![Build: MinGW / GCC](https://img.shields.io/badge/Compiler-GCC_14.2.0-green.svg)](https://gcc.gnu.org/)
-[![Tests: 1181 Passed](https://img.shields.io/badge/Tests-1181%20Passed-brightgreen.svg)](#12-automated-test-instructions-and-actual-results)
+[![Backend: Flask & ctypes](https://img.shields.io/badge/Backend-Python_Flask_+_ctypes-darkgreen.svg)](#7-web-application-architecture-and-quickstart)
+[![Frontend: React 19 + Vite](https://img.shields.io/badge/Frontend-React_19_+_Vite-yellow.svg)](#7-web-application-architecture-and-quickstart)
+[![Tests: 1181 C + 8 API Passed](https://img.shields.io/badge/Tests-100%25_Passed-brightgreen.svg)](#12-automated-test-instructions-and-actual-results)
 [![Course: Data Structures](https://img.shields.io/badge/Course-CSBS%20Sem%20III-purple.svg)](#4-how-agriflow-relates-to-kjs-agr-01)
 
 ---
 
 ## 1. Project Title and Overview
 
-**AgriFlow** is an educational, production-grade console application written in standard **C99** for the Data Structures IA-2 assessment. It demonstrates the practical, scalable synergy of three fundamental data structures:
-1. **Quad-Tree:** 2D spatial indexing for rapid geographic range queries over thousands of geofenced farm plots.
-2. **Hash Map:** Separate-chaining hash table for constant-time $O(1)$ plot lookup and live sensor telemetry updates.
-3. **Binary Min-Heap:** Priority queue for dynamic urgency scoring and constrained water budget scheduling.
+**AgriFlow — Geofenced Plot Lookup and Irrigation Priority Scheduler** is a complete, production-grade agricultural decision support application built for the **Data Structures IA-2** assessment in **Semester III, CSBS, K J Somaiya College of Engineering**.
 
-The application models a smart irrigation dispatch engine designed to manage up to **25,000 sugarcane plots** across a $100 \times 100$ coordinate grid without resorting to naive linear array scans.
+The project features:
+- **C99 Algorithmic Engine:** Compiled into an authoritative shared library (`bin/agriflow.dll` / `agriflow.so`) implementing the three mandatory data structures:
+  1. **Quad-Tree:** 2D spatial indexing for rapid rectangular range queries over sugarcane plots.
+  2. **Hash Map:** Separate-chaining hash table with Knuth's multiplicative Fibonacci hashing for constant-time $O(1)$ plot lookup and live sensor telemetry updates.
+  3. **Binary Min-Heap:** Priority queue for dynamic urgency scoring and greedy water budget scheduling.
+  4. **Shared Plot Pool:** Unified authoritative array (`plotPool[MAX_PLOTS]`) guaranteeing complete data consistency and zero duplication.
+- **Python Flask REST API:** Exposes clean JSON endpoints interfacing with the C shared library via Python `ctypes` FFI with mutex serialization.
+- **React 19 + Vite Web Application:** A desktop-first, responsive web application adhering to the reference three-color visual identity:
+  - **Primary Forest Green:** `#183630` (sidebar, primary dark surfaces, typography)
+  - **Warm Ivory / Stone:** `#E3DAC9` (page background, content surfaces, card backgrounds)
+  - **Muted Champagne Gold:** `#E5C690` (primary actions, highlights, badges, accents)
+- **Original C99 Console Application:** Preserved in its entirety (`bin/agriflow.exe`).
 
 ---
 
@@ -117,34 +127,130 @@ To maintain strict data integrity, AgriFlow adheres to the **Single Source of Tr
 
 ---
 
-## 7. Data Structure to Source-File Mapping
+## 7. Full-Stack Directory Structure
 
 ```text
 AgriFlow/
+├── backend/
+│   ├── agriflow_core.py     # Python ctypes FFI bindings with mutex serialization
+│   ├── app.py               # Flask REST API exposing endpoints
+│   └── test_api.py          # Automated Python API test suite (8 test suites)
+├── frontend/
+│   ├── index.html           # HTML entry point with formal title and favicon
+│   ├── package.json         # React 19, Vite, Lucide icons, scripts
+│   ├── src/
+│   │   ├── main.jsx         # React application mounting
+│   │   ├── App.jsx          # Master application component & page routing
+│   │   ├── index.css        # Exact 3-color palette CSS design tokens & responsive grid
+│   │   ├── api.js           # REST API client wrapper
+│   │   ├── components/
+│   │   │   ├── Sidebar.jsx  # Fixed desktop sidebar in Forest Green (#183630)
+│   │   │   ├── Header.jsx   # Top header with actions & status
+│   │   │   ├── Icons.jsx    # Custom SVG icons in brand styling
+│   │   │   ├── MoistureHistogram.jsx # Soil moisture distribution chart
+│   │   │   └── WalkthroughModal.jsx   # Documented 6-plot experiment modal
+│   │   └── pages/
+│   │       ├── Overview.jsx           # Dashboard metrics & priority plots
+│   │       ├── PlotExplorer.jsx       # 2D Cartesian grid & C Quad-Tree range queries
+│   │       ├── PlotManagement.jsx     # Add plot, ID search, delete, validation
+│   │       ├── SensorUpdates.jsx      # Live simulated telemetry via Hash Map O(1)
+│   │       ├── IrrigationScheduler.jsx# Water budget dispatch via Min-Heap
+│   │       ├── DataStructures.jsx     # Academic deep-dive & live C telemetry
+│   │       └── AboutAgriFlow.jsx      # Academic context & viva talking points
 ├── include/
-│   ├── types.h        # Struct definitions (Plot, Rect, QuadNode, HashNode, MinHeap) & constants
-│   ├── plotpool.h     # Central plot pool declarations, validation, and generation prototypes
-│   ├── quadtree.h     # Quad-Tree spatial index prototypes and statistics
-│   ├── hashmap.h      # Hash Map separate-chaining and sensor update prototypes
-│   ├── minheap.h      # Binary Min-Heap priority queue prototypes and tie-breaking logic
-│   └── scheduler.h    # Urgency scoring and irrigation schedule dispatch prototypes
+│   ├── types.h              # C structs (Plot, Rect, QuadNode, HashNode, MinHeap)
+│   ├── plotpool.h           # Central plot pool declarations & prototypes
+│   ├── quadtree.h           # Quad-Tree spatial index prototypes
+│   ├── hashmap.h            # Hash Map separate-chaining prototypes
+│   ├── minheap.h            # Binary Min-Heap priority queue prototypes
+│   ├── scheduler.h          # Urgency scoring & irrigation schedule prototypes
+│   └── agriflow_c_api.h     # Exported C API declarations for ctypes DLL
 ├── src/
-│   ├── plotpool.c     # Plot pool storage, input validation, and synthetic data generation
-│   ├── quadtree.c     # QuadNode creation, quadrant subdivision, pruning, and range queries
-│   ├── hashmap.c      # Multiplicative hashing, chaining, lookup, update, and deletion
-│   ├── minheap.c      # Min-Heap push, extractMin, sift-up, sift-down, and memory expansion
-│   ├── scheduler.c    # Urgency computation and daily water budget dispatch engine
-│   └── main.c         # Interactive menu, walkthrough demo, and statistics presentation
+│   ├── plotpool.c           # Plot pool storage, validation, & synthetic generation
+│   ├── quadtree.c           # Quad-Tree creation, subdivision, & rangeQuery
+│   ├── hashmap.c            # Multiplicative hashing, lookup, update, & deletion
+│   ├── minheap.c            # Min-Heap push, extractMin, sift-up, & sift-down
+│   ├── scheduler.c          # Urgency computation & daily water budget engine
+│   ├── agriflow_c_api.c     # Robust C API implementation for shared library
+│   └── main.c               # Original C99 interactive console application
+├── bin/
+│   ├── agriflow.dll         # Compiled C shared library (MinGW GCC)
+│   ├── agriflow.exe         # Original C console application
+│   ├── test_all.exe         # C automated test runner
+│   └── benchmark.exe        # C benchmark runner
 ├── tests/
-│   └── test_all.c     # Comprehensive automated test suite (1181 assertions)
+│   └── test_all.c           # Comprehensive C test suite (1181 assertions)
 ├── bench/
-│   └── benchmark.c    # Empirical benchmarking suite (1,000 to 25,000 plots)
-├── Makefile           # Cross-platform Makefile for GCC (MinGW and Linux)
-├── README.md          # Comprehensive project documentation
-└── docs/
-    ├── design.md      # Implementation-oriented design summary
-    └── ...            # Preserved academic reference documents
+│   └── benchmark.c          # Empirical C benchmark suite (1k to 25k plots)
+├── docs/                    # Preserved academic design documents & case study
+├── Makefile                 # Cross-platform Makefile for GCC (all, lib, test, run)
+└── README.md                # Comprehensive project documentation
 ```
+
+---
+
+## 8. Web Application Architecture and Quickstart
+
+### Exact Three-Color Visual Identity
+The AgriFlow website strictly implements the foundational three-color palette:
+- **Primary Forest Green (`#183630`):** Sidebar, navigation, primary dark surfaces, headings.
+- **Warm Ivory / Stone (`#E3DAC9`):** Page background, lighter cards, contrast surfaces.
+- **Muted Champagne Gold (`#E5C690`):** Action buttons, selected states, priority badges, highlights.
+
+### Prerequisites
+- **C Compiler:** GCC 14.2.0 (MinGW-w64 or Linux GCC)
+- **Python:** Python 3.10+ (tested on Python 3.14.4)
+- **Node.js & npm:** Node.js v20+ (tested on Node.js v24.15.0, npm 11.12.1)
+
+---
+
+### Step-by-Step Execution Guide (PowerShell on Windows)
+
+#### 1. Compile the C Shared Library
+```powershell
+# From project root:
+& "C:\Program Files\CodeBlocks\MinGW\bin\gcc.exe" -std=c99 -Wall -Wextra -Wpedantic -O2 -Iinclude -shared src/plotpool.o src/quadtree.o src/hashmap.o src/minheap.o src/scheduler.o src/agriflow_c_api.o -o bin/agriflow.dll -lm
+
+# Or using Makefile:
+make dll
+```
+
+#### 2. Start the Python Flask REST API
+```powershell
+# Install backend requirements (one-time):
+python -m pip install flask flask-cors
+
+# Start the Flask API server:
+python -m backend.app
+```
+*API will run at `http://127.0.0.1:5000`.*
+
+#### 3. Start the React + Vite Frontend
+```powershell
+# Open a second PowerShell terminal:
+cd frontend
+& "C:\Program Files\nodejs\npm.cmd" run dev
+```
+*Website will be accessible at **`http://localhost:5173/`**.*
+
+#### 4. Run Automated Backend API Tests
+```powershell
+python -m unittest backend/test_api.py
+```
+*(Runs 8 test suites validating health, seeding, plot CRUD, duplicate rejection, sensor update, spatial query, min-heap scheduling, and walkthrough demo).*
+
+#### 5. Run Original C Automated Test Suite
+```powershell
+.\bin\test_all.exe
+```
+*(Runs all 1,181 assertions across Suites A through F).*
+
+#### 6. Build Frontend for Production
+```powershell
+cd frontend
+& "C:\Program Files\nodejs\npm.cmd" run build
+```
+*(Production bundles generated in `frontend/dist/` in <200ms).*
 
 ---
 
