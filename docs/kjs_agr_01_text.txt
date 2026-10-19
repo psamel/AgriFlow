@@ -1,0 +1,931 @@
+=== PAGE 1 ===
+   
+ 
+Page 1 of 11 
+ 
+FRAMEWORK FOR AI USE CASE INTEGRATION IN CURRICULUM DELIVERY 
+Part A: AI Use Case Profile 
+1. Use Case ID: KJS-AGR-01 
+2. Use Case Title: Irrigation Advisory System for Sugarcane Crop using AI and Sensor-based 
+Technology 
+3. AI Application Vertical: Agriculture 
+4. Collaborating Organization:  K J Somaiya Applied Agricultural Research (KIAAR), 
+Sameerwadi, Karnataka, Godavari Biorefineries Ltd. (GBL) 
+5. Beneficiaries: Farmers (approx. 18,000–25,000 sugarcane farmers associated with GBL and 
+KIAAR, Cane department su pervisors and field assistants, Agricultural researchers and 
+agronomists, Sugar factory management for planning cane availability and productivity.  
+6. Problem Statement:  Sugarcane cultivation requires  large quantities of water, and irrigation 
+scheduling is generally based on farmers ’ experience rather than scientific recommendations. 
+Due to inadequate knowledge of crop water requirements, soil moisture conditions, weather 
+forecasts, and irrigation timi ng, farmers often practice over -irrigation or delayed irrigation, 
+resulting in: 
+ Water wastage 
+ Reduced crop productivity 
+ Yield loss due to moisture stress 
+ Increased energy consumption 
+ Higher cultivation costs 
+ Nutrient losses because of improper fertigation 
+ Inefficient use of electricity supplied for irrigation pumps 
+ Difficulty in monitoring thousands of spatially distributed farms 
+There is a need for an AI -driven irrigation advisory system that integrates field sensors, weather 
+forecasts, geospatial information, and machine learning models to provide plot -specific irrigation 
+recommendations and decision support to farmers in a simple and understandable manner. 
+7. Background and Context:  
+The KIAAR and GBL ecosystem supports nearly 18,000 –25,000 sugarcane farmers spread 
+across Northern Karnataka. Through previous geofencing initiatives, thousands of sugarcane 
+plots have already been digitized and spatially mapped. Soil testing records, farm er details, and 
+crop information are available through existing digital platforms.  However, irrigation decisions 
+are still largely manual and depend on experience rather than data -driven approaches. 
+Variations in soil types, crop stages, weather conditions , rainfall events, and water availability 
+necessitate dynamic irrigation recommendations. 
+Recent advances in IoT and sensor technologies, Remote sensing, Artificial Intelligence and 
+Machine Learning, Weather forecasting systems, Geospatial analytics, Mobil e applications and 
+dashboards, etc. provide an opportunity to build a smart irrigation advisory system capable of 
+delivering personalized recommendations at the plot level. 
+The proposed system aims to combine sensor observations, satellite -derived informat ion, 
+weather forecasts, and AI models to improve irrigation efficiency, enhance water productivity, 
+and promote sustainable sugarcane cultivation. 
+  
+
+=== PAGE 2 ===
+   
+ 
+Page 2 of 11 
+ 
+8. Objectives:  
+1) Develop an AI -enabled irrigation advisory system for sugarcane cultivation that integrates 
+field observations, weather information, and crop -specific requirements to support informed 
+irrigation decision-making. 
+2) Monitor soil moisture, environmental conditions, and crop status using sensor networks and 
+geospatial technologies to enable plot -level ass essment and precision irrigation 
+management. 
+3) Generate real -time, forecast -based, and plot -specific irrigation and fertigation 
+recommendations to optimize irrigation scheduling, improve resource utilization, and support 
+operational constraints such as electricity availability. 
+4) Develop farmer-friendly web and mobile platforms for advisory dissemination, visualization of 
+geofenced plots, crop information management, and decision support. 
+5) Enhance water use efficiency, reduce yield losses due to water stress, and improve the 
+sustainability and climate resilience of sugarcane farming practices. 
+9. Solution Approach:  
+The proposed system will integrate multiple data sources and AI models to provide intelligent  
+irrigation recommendations: IoT Sensors, Geospatial Data, Weather Data, and Farm Information 
+and develop the below listed AI Models for Prediction:  
+ Next Irrigation Date Prediction 
+ Irrigation Duration Prediction 
+ Crop Water Requirement Prediction 
+ Water Stress Probability Model 
+ Rainfall-Adjusted Irrigation Recommendation 
+ Yield Loss Prediction Due to Delayed Irrigation 
+ Pump Scheduling Optimization 
+ Fertigation Recommendation Model 
+ Disease and Water Stress Forecasting 
+ Yield Prediction Model 
+ Farmer-Friendly Advisory Generation Model (LLM-Based) 
+10. Operational Challenges:  
+A. Sensor-related 
+ Sensor calibration and maintenance.  
+ Power supply and battery life.  
+ Data communication failures.  
+ Missing or noisy sensor data.  
+B. AI Challenges 
+ Limited labeled datasets.  
+ Model generalization across soil types.  
+ Seasonal variability.  
+C. Geospatial Challenges 
+ Accurate plot mapping.  
+ Dynamic crop boundaries.  
+ Multi-source data integration.  
+D. Weather Challenges 
+ Reliability of rainfall forecasts.  
+ Micro-climatic variations.  
+
+=== PAGE 3 ===
+   
+ 
+Page 3 of 11 
+ 
+E. Implementation Challenges 
+ Connectivity issues in villages.  
+ Farmer adoption and trust.  
+ Device maintenance.  
+ Training requirements.  
+ Scalability to 25,000 farms.  
+ Continuous model updating.  
+ Integration with existing STEPS (Somaiya Technology for Efficient Plot Survey) platforms. 
+11. High-Level Workflow:  
+1) Data Acquisition: Collection of field, crop, soil, weather, and geospatial information through 
+mobile applications, databases, APIs, sensor networks, IoT devices, satellite imagery, and 
+GIS-based plot digitization. 
+2) Data Integration: Integration of sensor observations, weather data, satellite imagery, soil 
+reports, farmer records, and historical yield information into a unified agricultural data 
+platform. 
+3) AI Analytics: Development of AI/ML models for soil moisture forecasting, irrigation 
+scheduling, water stress prediction, fertigation planning, pump scheduling optimization, yield 
+loss estimation, and yield prediction. 
+4) Decision Support: Generation of plot -specific irrigation and fertigation recommendations 
+based on field conditions, crop requirements, weather information, and predictive analytics. 
+5) Dashboard and Advisory Platform: Delivery of recommendations through web and mobile 
+applications featuring farmer dashboards, spatial visualization of plots, irrigation and weather 
+information, soil and crop health monitoring, fe rtigation guidance, yield analytics, and alert 
+generation. 
+Details of workflow activities: 
+Workflow Stage Activities Details 
+1. Field Data 
+Acquisition 
+Sensor 
+deployment, IoT 
+devices, data 
+collection 
+Design sensor interfaces, communication modules, and 
+wireless data acquisition systems (EXTC) 
+Development of embedded systems and edge devices 
+for sensor integration (ECE) 
+Communication protocols and IoT gateway connectivity 
+(CCE) 
+Smart sensing systems and autonomous monitoring 
+solutions (RAI) 
+2. Data 
+Transmission 
+and Integration 
+Data ingestion, 
+cloud 
+connectivity, 
+database 
+creation 
+Development of APIs, cloud infrastructure, database 
+management and integration platforms (IT) 
+Backend systems, middleware, and data 
+synchronization mechanisms (CE) 
+Enterprise applications and process workflows for 
+agricultural data management (CSBS) 
+3. Data Pre-
+processing and 
+Feature 
+Engineering 
+Data cleaning, 
+normalization, 
+feature extraction 
+Data pre-processing, feature engineering, and 
+preparation of datasets for machine learning models 
+(IT, CE, AI&DS) 
+Development of data pipelines and automated 
+processing frameworks (IT, CE) 
+4. AI Analytics 
+and Predictive 
+Prediction of 
+irrigation date, 
+Development and validation of machine learning and 
+deep learning models (IT, CE, AI&DS) 
+
+=== PAGE 4 ===
+   
+ 
+Page 4 of 11 
+ 
+Modeling duration, water 
+stress, yield loss, 
+pump scheduling 
+Intelligent decision-making algorithms and optimization 
+models (RAI) 
+AI model deployment and inference frameworks (CE) 
+5. Decision 
+Support Engine 
+Rule-based 
+recommendations 
+and optimization 
+Design of business logic and recommendation engines 
+(IT) 
+Workflow optimization and integration with enterprise 
+applications (CSBS) 
+AI-assisted decision-making and predictive analytics 
+(IT, CE, AI&DS) 
+6. Generative AI 
+Advisory Layer 
+Conversion of 
+predictions into 
+farmer-friendly 
+advisories 
+Large Language Models (LLMs), multilingual advisory 
+generation, chatbot development (IT, CE, AI&DS) 
+Development of AI service integration and API 
+interfaces (IT, CE) 
+Integration of AI models into applications and scalable 
+deployment (CE) 
+7. Dashboard 
+and Mobile 
+Application 
+Development 
+Web and mobile 
+interfaces, 
+visualization, GIS 
+maps 
+Full-stack web and mobile application development (IT, 
+CE) 
+Backend services, APIs, authentication, and database 
+integration (CE) 
+User workflows, reporting systems, and management 
+dashboards (CSBS) 
+AI visualization and analytics dashboards (IT, CE, 
+AI&DS) 
+8. Smart 
+Irrigation 
+Automation 
+Automated pump 
+operation and 
+scheduling 
+Embedded controllers and smart irrigation hardware 
+(ECE) 
+Wireless communication and control systems (EXTC) 
+Intelligent autonomous irrigation control systems (RAI) 
+IoT communication protocols and remote monitoring 
+(CCE) 
+9. Farmer 
+Interaction and 
+Support 
+Systems 
+Notifications, 
+chatbot, advisory 
+dissemination 
+Mobile applications and notification services (IT, CE) 
+Conversational AI and personalized recommendations 
+(IT, CE, AI&DS) 
+User experience and service workflows (CSBS) 
+10. Continuous 
+Learning and 
+System 
+Improvement 
+Feedback 
+collection, model 
+retraining, 
+performance 
+monitoring 
+Continuous learning frameworks and model 
+enhancement (IT, CE) 
+Monitoring platforms and cloud services (IT, CE) 
+System scalability and performance optimization (IT, 
+CE) 
+Adaptive and self-learning intelligent systems (RAI) 
+12. Expected Outputs: 
+ IoT System for data acquisition 
+ AI-enabled irrigation advisory platform. 
+ Farmer dashboard. 
+ Multi-source integrated agricultural data repository.   
+ Real-time irrigation recommendation system.  
+ Forecasting and alert mechanisms.  
+ LLM-based multilingual advisory module. 
+
+=== PAGE 5 ===
+   
+ 
+Page 5 of 11 
+ 
+ 
+Fig. Software Output Sample 
+13. Modern AI Governance and Paradigms: 
+Area Relevance Recommended Consideration 
+Privacy & Data 
+Protection High  
+Ensure secure handling of farmer information, plot boundaries, 
+sensor data, and soil reports through role -based access 
+control, encryption, secure APIs, and data anonymization 
+wherever required. Compliance with Digital Personal Data 
+Protection (DPDP) Act and institutional data policies should be 
+ensured. 
+AI Security & 
+Trustworthiness High 
+Protect AI models and IoT infrastructure against cyber threats, 
+unauthorized access, data tampering, and adversarial attacks. 
+Implement secure communication protocols, model validation 
+mechanisms, audit logs, and periodic security assessments to 
+maintain reliability and trust in advisory recommendations. 
+Responsible AI High 
+Ensure transparency, fairness, explainability, and 
+accountability in AI-generated irrigation advisories. Models 
+should provide interpretable recommendations and avoid bias 
+arising from variations in soil types, crop varieties, or 
+geographic regions. Continuous monitoring and validation 
+should be carried out before large-scale deployment. 
+Generative AI / 
+LLMs High 
+Utilize Large Language Models (LLMs) to convert technical 
+predictions into farmer-friendly multilingual advisories in 
+English, Kannada, Marathi, and Hindi. Examples include 
+recommendations such as “Irrigate tomorrow morning for 2.5 
+hours” or “Rainfall is expected; irrigation is not required today.” 
+
+
+=== PAGE 6 ===
+   
+ 
+Page 6 of 11 
+ 
+LLMs can also support chatbot-based query handling and 
+knowledge dissemination. 
+Agentic AI Medium to High 
+Intelligent AI agents may autonomously analyze sensor data, 
+weather forecasts, crop stage, and electricity availability to 
+generate personalized irrigation schedules, fertigation 
+recommendations, and alert notifications. Agentic workflows 
+can support proactive decision-making and continuous 
+monitoring across thousands of farms. 
+Human-in-the-
+Loop Decision 
+Making 
+High 
+AI recommendations should complement, not replace, 
+agronomists, field supervisors, and farmers. Critical decisions 
+regarding irrigation, fertigation, and stress management 
+should incorporate expert validation and farmer feedback. 
+Mechanisms for manual override and advisory acceptance 
+should be provided within the dashboard and mobile 
+application. 
+Regulatory / 
+Governance 
+Considerations 
+Medium to 
+High 
+Ensure adherence to national policies and standards related to 
+AI, geospatial data, IoT deployment, and digital agriculture. 
+Establish governance mechanisms for data ownership, 
+consent management, data sharing, model versioning, and 
+periodic audits. Clearly define responsibilities among KIAAR, 
+GBL, technology providers, and farmers to ensure ethical and 
+sustainable use of AI technologies. 
+Part B: Program-wise AI Use Case Mapping 
+14. Programs Mapped: 
+Institute: KJSIT Institute: KJSSE 
+Information Technology √ Information Technology √ 
+Computer Engineering √ Computer Engineering √ 
+Artificial Intelligence & Data Science √ Artificial Intelligence & Data Science √ 
+Electronics and Telecommunication √ Electronics & Telecommunication Engineering √ 
+  Computer & Communication Engineering √ 
+  Electronics & Computer Engineering √ 
+  Electronics Engineering (VLSI Design & Technology) × 
+  Computer Science & Business Systems √ 
+  Mechanical Engineering × 
+  Robotics & Artificial Intelligence √ 
+15. Technology Domains Mapped: 
+Program Technology Domain Layer Role in Use Case Inter-Disciplinary Dependencies 
+CE / IT 
+(Primary) 
+Computing 
+Foundations 
+DBMS Designing 
+Database for all 
+data sources 
+Receives sensor data 
+from KJSSE, Farmer 
+data from KIAAR/GBL 
+CE / IT 
+(Primary) 
+Programming 
+and Software 
+Development 
+Software Development of 
+Dashboard for 
+Data Visualization/ 
+Mobile app 
+Receives sensor data 
+from KJSSE, Farmer 
+data from KIAAR/GBL 
+
+=== PAGE 7 ===
+   
+ 
+Page 7 of 11 
+ 
+CE / IT 
+(Primary) 
+Artificial 
+Intelligence 
+AI Models Trend analysis, 
+Predictions, 
+Recommendations, 
+Forecasting 
+Receives sensor data 
+from KJSSE, Farmer 
+data from KIAAR/GBL 
+ETRX 
+(KJSSE) 
+Networks and 
+Security 
+IoT Acquisition of 
+soil/weather etc. 
+data 
+- 
+ Emerging Technologies 
+Edge 
+Computing/ 
+Cloud 
+Computing 
+ - 
+Part C: Course-level AI Use Case Mapping 
+16. Course-level AI Use Case Mapping: 
+Institute: KJSSE     Program: Electronics & Computer Engineering (EXCP) 
+Course Contribution to Use 
+Case 
+Relevant Topics from 
+Syllabus 
+Potential Modes of 
+Integration 
+Analog 
+Electronic 
+Circuits (Sem 
+III) 
+Analog front-end for 
+soil moisture, 
+temperature, and 
+rainfall sensor 
+interfacing 
+Op-amp conditioning, 
+capacitive sensor 
+interfacing, ADC biasing 
+Lab: design signal 
+conditioning circuit for 
+capacitive soil moisture 
+sensor 
+Python 
+Programming 
+Laboratory 
+(Sem III) 
+Weather API 
+integration, data 
+parsing, basic ML 
+scripting for irrigation 
+models 
+REST API calls, JSON 
+parsing, pandas, 
+matplotlib, data 
+visualisation 
+Lab: fetch weather forecast 
+from open API, parse 
+JSON, plot temperature 
+and rainfall 
+Networks, 
+Signals and 
+Systems (Sem 
+III) 
+Signal processing for 
+multi-sensor 
+agricultural data 
+streams 
+Sampling, convolution, 
+frequency analysis, noise 
+in sensor signals 
+Tutorial: analyse soil 
+moisture sensor output 
+signal; design sampling 
+strategy 
+Data Structures 
+and Algorithms 
+(Sem III) 
+Efficient spatial data 
+management for 
+geofenced plots of 
+25,000 farms 
+Spatial data structures 
+(quad-tree, k-d tree), 
+indexing, priority queues 
+Assignment: design spatial 
+lookup structure for plot-
+level sensor data retrieval 
+Microprocessor 
+and 
+Microcontroller 
+(Sem IV) 
+IoT sensor node 
+firmware for soil and 
+weather data 
+acquisition and 
+wireless upload 
+GPIO, ADC, SPI/I2C, 
+LoRa module interfacing, 
+low-power sleep modes 
+Lab: program 
+microcontroller sensor 
+node for soil moisture and 
+temperature logging 
+Analog and 
+Digital 
+Communication 
+(Sem IV) 
+Wireless transmission 
+from field sensor 
+nodes to cloud IoT 
+gateway 
+LPWAN, LoRa, wireless 
+protocol stack, data 
+framing, range planning 
+Case study: design LoRa-
+based communication 
+architecture for distributed 
+field sensors 
+Database 
+Management 
+Systems (Sem 
+IV) 
+Multi-source 
+agricultural database 
+integrating soil, 
+weather, crop, and 
+farmer data 
+ER design, spatial 
+databases, SQL, data 
+integration, normalisation 
+Mini-project: design 
+integrated agricultural DB 
+schema for irrigation 
+advisory system 
+Web 
+Programming 
+Farmer dashboard 
+web interface for 
+HTML/CSS, JavaScript, 
+chart.js, REST API 
+Lab: build simple farmer-
+facing dashboard with soil 
+
+=== PAGE 8 ===
+   
+ 
+Page 8 of 11 
+ 
+Laboratory 
+(Sem IV) 
+displaying irrigation 
+recommendations 
+consumption, map APIs moisture and advisory 
+display 
+Sensors and 
+Measuring 
+Instruments 
+(Sem V) 
+Soil moisture, weather 
+station, tensiometer, 
+and rain gauge sensor 
+deployment 
+Sensor selection, 
+calibration, accuracy 
+analysis, IoT field 
+deployment 
+Lab: deploy and calibrate 
+soil moisture sensor; assess 
+accuracy over soil types 
+Automation 
+and Control 
+System (Sem 
+V) 
+Automated pump 
+scheduling based on 
+AI advisory and 
+electricity availability 
+PLC control, relay 
+control, scheduled 
+automation, SCADA 
+basics 
+Lab: design automated 
+irrigation pump controller 
+with soil moisture 
+threshold trigger 
+Advanced 
+Python 
+Programming 
+and 
+Applications 
+(Sem V) 
+ML model pipeline: 
+feature engineering, 
+model training, Flask 
+API for advisory 
+serving 
+scikit-learn, feature 
+engineering, 
+Flask/FastAPI, model 
+deployment 
+Mini-project: build 
+prediction pipeline for next 
+irrigation date from multi-
+sensor data 
+Software 
+Engineering 
+(Sem V) 
+Architecture design 
+for multi-component 
+advisory platform and 
+API specifications 
+SDLC, component 
+architecture, API design, 
+UML, testing plans 
+Assignment: design 
+modular system 
+architecture for irrigation 
+advisory platform 
+Digital Signal 
+& Image 
+Processing 
+(Sem VI) 
+Satellite multispectral 
+image processing for 
+NDVI and crop water 
+stress detection 
+Band analysis, NDVI 
+computation, image 
+segmentation, remote 
+sensing basics 
+Lab: process satellite 
+image to compute NDVI 
+map and identify crop 
+stress patches 
+Applied Data 
+Science (Sem 
+VI) 
+AI models for yield 
+prediction, water 
+stress probability, and 
+irrigation scheduling 
+ML pipelines, regression, 
+classification, ensemble 
+methods, evaluation 
+Course project: train yield 
+prediction model from soil, 
+weather, and crop stage 
+data 
+Computer 
+Communication 
+Networks (Sem 
+VI) 
+IoT gateway cloud 
+connectivity, MQTT 
+pipelines, and API 
+integration 
+MQTT, REST, cloud 
+services, IoT security, 
+network architecture 
+Lab: implement end-to-end 
+MQTT pipeline from 
+sensor to cloud advisory 
+engine 
+Mobile App 
+Development 
+(Sem VI) 
+Farmer-friendly 
+mobile app for 
+receiving plot-specific 
+irrigation advisories 
+Flutter, push notifications, 
+GPS location, map 
+visualisation, offline 
+mode 
+Mini-project: build Flutter 
+prototype showing plot 
+map with irrigation 
+advisory overlay 
+ 
+Institute: KJSSE     Program: Computer Science & Business Systems (CSBS) 
+Course Contribution to 
+Use Case 
+Relevant Topics from 
+Syllabus 
+Potential Modes of 
+Integration 
+Artificial 
+Intelligence and 
+Machine 
+Learning (Sem 
+III) 
+AI/ML model 
+development for 
+irrigation 
+scheduling, water 
+stress, and yield 
+prediction 
+Supervised learning, 
+decision trees, 
+regression, ensemble 
+methods 
+Assignment: build and evaluate 
+irrigation date prediction model 
+from historical farm data 
+Statistical 
+Methods and 
+Probability 
+(Sem III) 
+Statistical 
+modelling of 
+weather 
+uncertainty and 
+crop water 
+Bayesian inference, 
+forecasting, confidence 
+intervals, uncertainty 
+quantification 
+Tutorial: incorporate rainfall 
+forecast uncertainty into 
+irrigation decision using 
+Bayesian reasoning 
+
+=== PAGE 9 ===
+   
+ 
+Page 9 of 11 
+ 
+requirement 
+variability 
+Data Structures 
+and Algorithms 
+(Sem III) 
+Spatial data 
+management for 
+25,000 geofenced 
+sugarcane plots 
+Quad-tree, k-d tree, 
+priority queues, spatial 
+indexing 
+Assignment: design data 
+structure for efficient spatial 
+lookup of 25,000 farm plots 
+Computer 
+Organization 
+and 
+Architecture 
+(Sem IV) 
+Understanding 
+compute 
+infrastructure for 
+scalable advisory 
+serving to 25,000 
+farms 
+Cloud computing 
+architecture, distributed 
+systems, scalability 
+Discussion: analyse compute 
+and storage needs for serving 
+real-time advisories at farm 
+scale 
+Operations 
+Research (Sem 
+IV) 
+Optimisation of 
+irrigation 
+scheduling 
+considering 
+electricity 
+availability and 
+water supply 
+LP, scheduling 
+algorithms, resource 
+optimisation, constraint-
+based models 
+Mini-project: formulate 
+optimal irrigation scheduling as 
+an OR problem 
+Business 
+Communication 
+and Value 
+Science (Sem 
+IV) 
+Stakeholder 
+communication 
+strategy for farmer 
+adoption of AI 
+advisory system 
+Value communication, 
+stakeholder analysis, 
+change management 
+Assignment: design 
+communication strategy for 
+farmer adoption including 
+trust-building plan 
+Deep Learning 
+& Gen AI (Sem 
+V) 
+LLM-based 
+multilingual 
+advisory 
+generation; deep 
+learning for crop 
+yield models 
+LLMs, multilingual 
+NLP, seq2seq models, 
+deep regression for yield 
+Course project: build 
+multilingual advisory 
+generation pipeline using LLM 
+for 4 languages 
+Data Mining 
+and Analytics 
+(Sem V) 
+Mining multi-year 
+irrigation and 
+yield data for 
+correlation 
+patterns and 
+anomalies 
+Association mining, 
+temporal pattern 
+analysis, anomaly 
+detection 
+Lab: mine irrigation dataset for 
+correlations between soil 
+moisture patterns and yield loss 
+Natural 
+Language 
+Processing 
+(Sem VI) 
+Multilingual 
+advisory 
+generation in 
+English, Kannada, 
+Marathi, and Hindi 
+Text generation, machine 
+translation, language 
+detection, multilingual 
+NLP 
+Mini-project: implement NLP 
+pipeline generating farmer 
+advisory in regional language 
+Introduction to 
+IoT (Sem VI) 
+IoT sensor 
+network 
+architecture for 
+soil and weather 
+data collection at 
+field scale 
+LoRa/NB-IoT, sensor 
+management, MQTT, 
+edge processing 
+Lab: design IoT architecture 
+for distributed soil sensor 
+network across farm plots 
+Software 
+Engineering 
+using UML 
+(Sem VI) 
+System design 
+documentation for 
+multi-component 
+advisory platform 
+Use case modelling, 
+component diagrams, 
+API specifications, V-
+model testing 
+Assignment: create full UML 
+model for the irrigation 
+advisory system components 
+IT Project Project Project lifecycle, risk Assignment: develop phased 
+
+=== PAGE 10 ===
+   
+ 
+Page 10 of 11 
+ 
+Management 
+(Sem VI) 
+management for 
+phased large-scale 
+deployment across 
+25,000 farms 
+management, agile 
+methodology, resource 
+planning 
+rollout project plan covering 
+pilot to full deployment 
+ 
+Part D: Inter-disciplinary Faculty Committee 
+17. Faculty Owner(s):  
+ Dr. Shyamal Virnodkar, Professor, Department of Computer Engineering, K J Somaiya 
+Institute of Technology (PI) 
+ Dr. Radhika Kotecha, Professor, Department of Information Technology, K J Somaiya 
+Institute of Technology 
+ Dr. Ninad Mehendale, Associate Professor, Department of Electronics Engineering, K J 
+Somaiya School of Engineering 
+Team: 
+ Dr. Umesh Shinde, Associate Professor, De partment of Basic Science and Humanities, K J 
+Somaiya Institute of Technology 
+ Dr. Dinesh Auti , Assistant Professor, Department of Electronics Engineering, K J Somaiya 
+School of Engineering 
+ Dr. Balwant Singh, Assistant Professor, Department of Electronics Engineering, K J Somaiya 
+School of Engineering 
+ 
+  
+
+=== PAGE 11 ===
+   
+ 
+Page 11 of 11 
+ 
+18. Program-level Integration Coordinators: 
+Institute Program Coordinator 
+KJSIT e.g. IT Faculty Name & Designation 
+KJSSE e.g. Mechanical Faculty Name & Designation 
+   
+   
+19. Course-wise Integration Coordinators: 
+Institute Program Course Course In-charge 
+KJSIT e.g. IT  Faculty Name & Designation 
+KJSSE e.g. Mechanical  Faculty Name & Designation 
+    
+    
+******** 
+

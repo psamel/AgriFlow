@@ -1,0 +1,348 @@
+Design Document
+Geofenced Plot Lookup and Irrigation Priority Scheduler
+Based on AI Use Case KJS-AGR-01: Irrigation Advisory System for Sugarcane Crop
+Course
+Data Structures (316U40C302 / 316U50C302), Sem III, CSBS
+Assessment
+IA-2: Design Document for Self-Developed Application
+Language
+C
+Data structures used
+Quad-tree (spatial index), Hash Map (plot ID lookup for live sensor updates) and Priority Queue / Min-Heap (irrigation scheduling)
+Team / Personal Details
+(Fill in before submission – group size must be exactly 3, all members from the same lab batch.)
+Batch / Division
+CSBS - A3
+Lab Batch
+A3
+Date of Submission
+Name
+Roll Number
+Email ID
+Role in Group
+Prathamesh Samel
+16015025063
+prathamesh.samel@somaiya.edu
+Rehaan Patil
+16015025050
+rehaan.patil@somaiya.edu
+Ansh Porwal
+16015025056
+ansh.porwal@somaiya.edu
+1. Problem Statement
+The KJS-AGR-01 use case is about an AI-driven irrigation advisory system that serves somewhere between 18,000 and 25,000 sugarcane farmers across Northern Karnataka. One of the main things this system needs to do is: given thousands of geofenced farm plots and a continuous stream of soil-moisture and weather sensor readings, it has to (a) quickly figure out which plots fall within a given field, taluka, or sensor coverage zone, (b) apply each incoming sensor reading to the right plot's record quickly, since readings arrive tagged with a plot ID rather than a location, and (c) decide which of the matched plots need irrigation most urgently right now, since water and electricity availability are both limited.
+If we did this the naive way — scanning a flat list of all plots for every region query, scanning again to find one specific plot ID for every incoming sensor reading, and re-scanning all matched plots to find the most urgent one every scheduling cycle — it just wouldn't scale once we're at 25,000 plots being queried, updated and rescheduled continuously. So this is really a data structures problem at its core: we need a structure that supports fast spatial range queries, a structure that supports fast direct lookup by plot ID, and a structure that supports fast, repeated extraction of the current highest-priority item as priorities keep changing.
+For this assignment, we built a small self-developed console application in C called Geofenced Plot Lookup + Irrigation Priority Scheduler, which models this specific piece of the larger use case using three data structures: a quad-tree for spatial indexing of the plots, a hash map for O(1) average lookup of a plot by its ID, and a priority queue (min-heap) for urgency-based irrigation scheduling.
+Scope of what we've implemented: the program (i) inserts a configurable number of farm plots, with GPS-style coordinates that are either randomly generated or assigned manually, into both a quad-tree and a hash map keyed by plot ID, (ii) takes a rectangular query region (e.g., a taluka boundary) and returns all the plots that fall inside it via the quad-tree, (iii) applies incoming live sensor readings to the correct plot in O(1) average time using the hash map, (iv) works out an urgency score for every matched plot based on its current soil moisture, forecast rainfall and days since it was last irrigated, and (v) uses a min-heap to keep extracting the plot that needs water most urgently, until the day's water budget runs out.
+2. Justification of Data Structure Choices
+For each of the three main structures we needed, we compared our final choice against 2 other realistic alternatives, looking at the time and space trade-offs for each.
+Structure
+Use in this system
+Time / Space trade-off
+Verdict
+Linear array / list of plots
+Store all 25,000 plots as a flat list; scan for a region match.
+Region query = O(n) since every plot must be checked. Space O(n), simplest to implement.
+Rejected – too slow at 25,000 plots, especially if queries run every few minutes.
+Grid / hash bucket by fixed cell
+Divide the region into fixed-size grid cells; hash-map cell id → list of plots.
+Region query is fast, O(k) for k matching cells, if density is uniform. Degrades badly when plots are clustered unevenly (common in real farmland), since some cells become huge lists.
+Rejected – plot density in the KIAAR/GBL region is uneven across talukas.
+Quad-tree (chosen)
+Recursively subdivide the field region into quadrants only where plot density is high.
+Region query O(log n + k); insert O(log n). Space O(n) but adapts to density, so no wasted buckets in sparse zones.
+Selected – balances query speed with uneven real-world plot distribution.
+Linear scan of plot pool
+Walk the plotPool array, checking plotId against the target, for every incoming sensor reading.
+Lookup = O(n) per reading, since we might scan the whole pool. Space O(n), no extra structure needed.
+Rejected – with sensor readings arriving continuously for thousands of plots, O(n) per lookup adds up fast.
+Balanced BST keyed by plotId
+Store plotId → plotPool index pairs in a self-balancing tree (e.g. AVL / Red-Black).
+Lookup and insert O(log n), guaranteed even in the worst case. Space O(n).
+Rejected – plotIds don't need to stay in sorted order for anything we do, so paying for tree balancing is wasted effort.
+Hash Map (chosen)
+Map plotId → plotPool index using an array of buckets with separate chaining.
+Lookup and insert O(1) average (O(n) worst case if many IDs collide). Space O(n).
+Selected – plot IDs are just well-spread integers, so a simple multiplicative hash keeps chains short and lookups close to O(1).
+Unsorted list of pending plots
+Keep matched plots in a plain list; scan for the most urgent each cycle.
+Finding the minimum is O(n) every cycle; insert is O(1). Cheap to build, expensive to query repeatedly.
+Rejected – scheduler must repeatedly ask 'who needs water most, right now'.
+Sorted array by urgency
+Keep matched plots sorted by urgency score at all times.
+Extract-min is O(1), but insert requires shifting elements, O(n) per insert as new sensor readings update urgency.
+Rejected – urgency scores change frequently as new sensor data arrives.
+Priority queue / min-heap (chosen)
+Store matched plots keyed by urgency score; always extract the most urgent plot first.
+Insert O(log n), extract-min O(log n), update-key O(log n). Balances frequent updates with frequent extraction.
+Selected – best fit for a scheduler with continuously changing, time-critical priorities.
+2.1 Complexity Summary
+Operation
+Time Complexity
+Space Complexity
+Quad-tree insert(plotIndex)
+O(log n) average, O(n) worst case (degenerate clustering)
+O(n) total nodes
+Quad-tree rangeQuery(zone)
+O(log n + k), k = plots returned
+O(k) for result list
+Hash Map insertOrUpdate(plotId)
+O(1) average, O(n) worst case (many collisions)
+O(n) total nodes
+Hash Map lookupPlotIndex(plotId)
+O(1) average, O(n) worst case
+O(1)
+Heap push(plotIndex, score)
+O(log n)
+O(1) amortised per element
+Heap extractMin()
+O(log n)
+O(1)
+Full schedule generation
+O(k log k) for k matched plots
+O(k)
+3. System Design Diagram
+The diagram below shows how everything flows through the system: plot data and live sensor readings go into the quad-tree and hash map, get narrowed down by the region query, run through urgency scoring, and finally pass through the priority queue to produce the day's irrigation schedule.
+Data flow summary:
+New plots are inserted into both the quad-tree (for spatial queries) and the hash map (for ID-based lookups); both structures point at the same shared plot pool, so there's no duplicated data.
+Live sensor readings are looked up via the hash map by plot ID and update that plot's moisture, rainfall and irrigation data directly in the plot pool, without touching the quad-tree at all.
+A region query (e.g. a specific taluka) walks the quad-tree and returns only the plot indices inside that zone.
+Each matched plot's urgency score is computed from its current soil moisture, rainfall forecast and days since last irrigation.
+Matched plots are pushed into a min-heap keyed by urgency score.
+The scheduler repeatedly calls extract-min to build the day's irrigation order until the water/electricity budget runs out.
+4. Algorithms (Implemented in C)
+All three structures below work off one shared array, plotPool, instead of copying full Plot records around. The quad-tree and the hash map both just store indices into it, so updating a plot through either one is immediately visible to the other.
+#define MAX_PLOTS           25000
+#define MAX_PLOTS_PER_NODE  4
+#define MAX_HEAP_SIZE       2048
+#define HASH_TABLE_SIZE     4099      /* prime, keeps chains short */
+ 
+typedef struct {
+    int    plotId;
+    double x, y;                      /* GPS-style coordinates          */
+    double soilMoisture;              /* percentage                     */
+    double rainForecastMM;            /* expected rainfall (mm)         */
+    int    daysSinceIrrigation;
+} Plot;
+ 
+Plot plotPool[MAX_PLOTS];             /* single source of truth for all plot data */
+int  plotPoolCount = 0;
+ 
+typedef struct {
+    double xMin, yMin, xMax, yMax;
+} Rect;
+4.1 Quad-Tree Node and Insert Algorithm
+Algorithm InsertPlot(node, plotIndex): first we check if plotPool[plotIndex] actually falls inside this node's boundary; if it doesn't, we just reject it. If the node is a leaf and still has space, we store the index there directly. Otherwise, we subdivide the node into four quadrants (NW, NE, SW, SE) just once, and then recursively insert the index into whichever child quadrant it actually falls into.
+typedef struct QuadNode {
+    Rect boundary;
+    int  plotIndex[MAX_PLOTS_PER_NODE];   /* indices into plotPool, not full Plot structs */
+    int  plotCount;
+    int  isLeaf;
+    struct QuadNode *nw, *ne, *sw, *se;
+} QuadNode;
+ 
+int rectContainsPoint(Rect r, double x, double y) {
+    return x >= r.xMin && x <= r.xMax && y >= r.yMin && y <= r.yMax;
+}
+ 
+int rectIntersects(Rect a, Rect b) {
+    return !(b.xMin > a.xMax || b.xMax < a.xMin ||
+             b.yMin > a.yMax || b.yMax < a.yMin);
+}
+ 
+void subdivide(QuadNode *node) {
+    double midX = (node->boundary.xMin + node->boundary.xMax) / 2.0;
+    double midY = (node->boundary.yMin + node->boundary.yMax) / 2.0;
+    Rect r = node->boundary;
+ 
+    node->nw = createQuadNode((Rect){r.xMin, midY, midX, r.yMax});
+    node->ne = createQuadNode((Rect){midX, midY, r.xMax, r.yMax});
+    node->sw = createQuadNode((Rect){r.xMin, r.yMin, midX, midY});
+    node->se = createQuadNode((Rect){midX, r.yMin, r.xMax, midY});
+    node->isLeaf = 0;
+}
+ 
+int insertPlot(QuadNode *node, int plotIndex) {
+    Plot *p = &plotPool[plotIndex];
+    if (!rectContainsPoint(node->boundary, p->x, p->y))
+        return 0;                                  /* out of bounds */
+ 
+    if (node->isLeaf && node->plotCount < MAX_PLOTS_PER_NODE) {
+        node->plotIndex[node->plotCount++] = plotIndex;
+        return 1;
+    }
+    if (node->isLeaf)
+        subdivide(node);
+ 
+    if (insertPlot(node->nw, plotIndex)) return 1;
+    if (insertPlot(node->ne, plotIndex)) return 1;
+    if (insertPlot(node->sw, plotIndex)) return 1;
+    if (insertPlot(node->se, plotIndex)) return 1;
+    return 0;                                      /* should not happen if boundary check passed */
+}
+4.2 Quad-Tree Range Query Algorithm
+Algorithm RangeQuery(node, zone, result): if this node's boundary doesn't even intersect the query zone, we skip the whole subtree, since there's no point checking further. At a leaf node, we test each stored plot's current position against the zone. At an internal node, we just recurse into all four children.
+void rangeQuery(QuadNode *node, Rect zone, int *result, int *count) {
+    if (node == NULL || !rectIntersects(node->boundary, zone))
+        return;                                    /* prune subtree */
+ 
+    if (node->isLeaf) {
+        for (int i = 0; i < node->plotCount; i++) {
+            int idx = node->plotIndex[i];
+            Plot *p = &plotPool[idx];
+            if (rectContainsPoint(zone, p->x, p->y))
+                result[(*count)++] = idx;           /* store the index, not a copy */
+        }
+        return;
+    }
+    rangeQuery(node->nw, zone, result, count);
+    rangeQuery(node->ne, zone, result, count);
+    rangeQuery(node->sw, zone, result, count);
+    rangeQuery(node->se, zone, result, count);
+}
+4.3 Hash Map — Hashing, Insert/Update and Lookup Algorithms
+Algorithm hashPlotId(plotId): spreads plotIds across the table using a multiplicative hash, then folds the result down to TABLE_SIZE buckets with a mod. Algorithm InsertOrUpdate(map, plotId, plotIndex): walk the chain at that bucket; if the plotId is already there, just update its stored index, otherwise add a new node at the front of the chain. Algorithm Lookup(map, plotId): walk the same chain and return the stored index, or -1 if that plotId isn't known yet.
+typedef struct HashNode {
+    int plotId;
+    int plotIndex;                    /* index into plotPool */
+    struct HashNode *next;            /* separate chaining for collisions */
+} HashNode;
+ 
+typedef struct {
+    HashNode *buckets[HASH_TABLE_SIZE];
+} PlotHashMap;
+ 
+unsigned int hashPlotId(int plotId) {
+    return ((unsigned int)plotId * 2654435761u) % HASH_TABLE_SIZE;
+}
+ 
+void insertOrUpdate(PlotHashMap *map, int plotId, int plotIndex) {
+    unsigned int h = hashPlotId(plotId);
+    HashNode *cur = map->buckets[h];
+ 
+    while (cur != NULL) {
+        if (cur->plotId == plotId) {
+            cur->plotIndex = plotIndex;   /* already known, just repoint it */
+            return;
+        }
+        cur = cur->next;
+    }
+    HashNode *node = (HashNode *) malloc(sizeof(HashNode));
+    node->plotId    = plotId;
+    node->plotIndex = plotIndex;
+    node->next      = map->buckets[h];
+    map->buckets[h] = node;               /* insert at head of chain */
+}
+ 
+int lookupPlotIndex(PlotHashMap *map, int plotId) {
+    unsigned int h = hashPlotId(plotId);
+    HashNode *cur = map->buckets[h];
+ 
+    while (cur != NULL) {
+        if (cur->plotId == plotId)
+            return cur->plotIndex;
+        cur = cur->next;
+    }
+    return -1;                            /* plotId not registered */
+}
+4.4 Applying a Live Sensor Reading
+Algorithm ApplySensorReading(map, plotId, moisture, rainForecast): look the plot up by ID through the hash map; if it's a plot we don't recognise, we just drop the reading. Otherwise, we update that plot's moisture and rainfall fields directly in plotPool, in O(1) average time, without ever touching the quad-tree.
+void applySensorReading(PlotHashMap *map, int plotId,
+                         double moisture, double rainForecastMM) {
+    int idx = lookupPlotIndex(map, plotId);
+    if (idx == -1)
+        return;                            /* unknown plot id, ignore the reading */
+ 
+    plotPool[idx].soilMoisture   = moisture;
+    plotPool[idx].rainForecastMM = rainForecastMM;
+}
+4.5 Urgency Scoring
+Algorithm ComputeUrgency(plot): here, a lower score actually means the plot is more urgent, since that's the min-heap convention. Urgency drops as soil moisture rises or as expected rainfall increases, and it rises the longer irrigation has been delayed.
+double computeUrgency(Plot p) {
+    double score = p.soilMoisture
+                 + (p.rainForecastMM * 0.5)
+                 - (p.daysSinceIrrigation * 2.0);
+    return score;                 /* lower score => more urgent => extracted first */
+}
+4.6 Min-Heap Push Algorithm
+Algorithm Push(heap, plotIndex, score): we add the new element at the end of the array, then keep swapping it with its parent (this is the sift-up step) as long as it's smaller than the parent, which restores the min-heap property in O(log n).
+typedef struct {
+    int    plotIndex;      /* index into plotPool */
+    double score;
+} HeapItem;
+ 
+typedef struct {
+    HeapItem items[MAX_HEAP_SIZE];
+    int size;
+} MinHeap;
+ 
+int parentIdx(int i) { return (i - 1) / 2; }
+int leftIdx(int i)   { return 2 * i + 1; }
+int rightIdx(int i)  { return 2 * i + 2; }
+ 
+void swapItems(HeapItem *a, HeapItem *b) {
+    HeapItem tmp = *a; *a = *b; *b = tmp;
+}
+ 
+void push(MinHeap *heap, int plotIndex, double score) {
+    int i = heap->size++;
+    heap->items[i].plotIndex = plotIndex;
+    heap->items[i].score     = score;
+ 
+    while (i > 0 && heap->items[parentIdx(i)].score > heap->items[i].score) {
+        swapItems(&heap->items[parentIdx(i)], &heap->items[i]);
+        i = parentIdx(i);
+    }
+}
+4.7 Min-Heap Extract-Min Algorithm
+Algorithm ExtractMin(heap): the root always holds the most urgent plot at any point. We remove it, move the last element in the array up to the root, then sift it down by repeatedly swapping with whichever child is smaller, until the heap property is restored.
+int extractMin(MinHeap *heap) {
+    HeapItem top = heap->items[0];
+    heap->items[0] = heap->items[--heap->size];
+ 
+    int i = 0;
+    while (1) {
+        int smallest = i;
+        int l = leftIdx(i), r = rightIdx(i);
+ 
+        if (l < heap->size && heap->items[l].score < heap->items[smallest].score)
+            smallest = l;
+        if (r < heap->size && heap->items[r].score < heap->items[smallest].score)
+            smallest = r;
+        if (smallest == i) break;
+ 
+        swapItems(&heap->items[i], &heap->items[smallest]);
+        i = smallest;
+    }
+    return top.plotIndex;             /* caller looks up plotPool[idx] for full data */
+}
+4.8 Driver Algorithm — Daily Schedule Generation
+Algorithm GenerateDailySchedule(root, zone, waterBudget): this ties everything together — range query, urgency scoring and the min-heap — to build the day's irrigation order, and it stops once the water/electricity budget for the day is exhausted.
+void generateDailySchedule(QuadNode *root, Rect zone, double waterBudget) {
+    int matched[MAX_HEAP_SIZE];
+    int matchedCount = 0;
+    rangeQuery(root, zone, matched, &matchedCount);
+ 
+    MinHeap heap = { .size = 0 };
+    for (int i = 0; i < matchedCount; i++) {
+        double score = computeUrgency(plotPool[matched[i]]);
+        push(&heap, matched[i], score);
+    }
+ 
+    printf("Irrigation order for today:\n");
+    while (heap.size > 0 && waterBudget > 0) {
+        int idx = extractMin(&heap);
+        Plot next = plotPool[idx];
+        double waterNeed = 10.0;      /* simplified fixed unit per plot */
+ 
+        printf("  Plot %d (moisture %.1f%%, %d days overdue)\n",
+               next.plotId, next.soilMoisture, next.daysSinceIrrigation);
+        waterBudget -= waterNeed;
+    }
+}
+5. Sample Walkthrough
+Let's say we insert 6 plots into a quad-tree covering a 100 × 100 unit field. A region query for the sub-zone (0,0)–(50,50) matches 3 plots: P1 (moisture 18%, 5 days overdue), P2 (moisture 42%, 1 day overdue), and P3 (moisture 25%, 3 days overdue). Working out their urgency scores (remember, lower = more urgent) gives roughly: P1 = 8, P3 = 19, P2 = 40. So when we push all three into the min-heap and keep calling extractMin(), we get the irrigation order P1 → P3 → P2, which matches what we'd expect intuitively too, since the driest, most-overdue plot (P1) gets served first.
+Now say a fresh sensor reading comes in for P2 (plotId 1042 in our pool) reporting that moisture has dropped to 15% after a hot, dry afternoon. applySensorReading() hashes 1042, walks a short chain in the hash map in O(1) average time, and updates plotPool directly — no need to search the quad-tree at all. If we recompute P2's urgency after that update, its score drops sharply, from roughly 40 down to around 13, which would push it ahead of P3 the next time the schedule is generated. This is exactly why the hash map matters: sensor data keeps changing plot urgency throughout the day, and every update needs to find its plot fast.
+So basically, this small example confirms that combining the quad-tree range query with min-heap scheduling gives us a sensible, priority-ordered irrigation list, without ever having to scan through the full set of 25,000 plots. Only the plots relevant to the queried zone get scored and queued in the first place.
+6. Summary
+So to sum up, by combining a quad-tree for spatial indexing, a hash map for identity lookups, and a priority queue for urgency-based scheduling, our application is able to answer three separate operational questions from the KJS-AGR-01 use case efficiently: “which plots are in this zone?” in O(log n + k) time via the quad-tree, “which plot does this sensor reading belong to?” in O(1) average time via the hash map, and “which plot needs water most urgently, right now?” in O(log n) time per update via the min-heap — instead of the O(n) linear scans that wouldn't scale to 25,000 farm plots. The C implementation is also fairly easy to extend further: additional fields like electricity availability windows or crop stage can be folded into computeUrgency() without changing the underlying data structures.
